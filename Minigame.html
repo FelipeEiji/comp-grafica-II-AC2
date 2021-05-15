@@ -62,9 +62,10 @@
 				const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 200, new BABYLON.Vector3(0, 0, 0));
 				camera.attachControl(canvas, true);
 				const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(4, 1, 0));
-        camera.lowerRadiusLimit = 2;
+        camera.lowerRadiusLimit = 10;
         camera.upperRadiusLimit = 10;
         camera.wheelDeltaPercentage = 0.01;
+        camera.upperBetaLimit = Math.PI / 2.2;
 
 				createCenario();
         showGUIInstructions();
@@ -98,7 +99,7 @@
       {
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
         var instructions = new BABYLON.GUI.TextBlock();
-        instructions.text = "Move w/ WASD keys look with the mouse, Press B to samba!";
+        instructions.text = "Move: WASD | Look: mouse | Samba: B";
         instructions.color = "red";
         instructions.fontSize = 16;
         instructions.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER
@@ -127,7 +128,7 @@
 
           //Hero character variables 
           var heroSpeed = 0.1;
-          var heroSpeedBackwards = 0.01;
+          var heroSpeedBackwards = 0.05;
           var heroRotationSpeed = 0.1;
 
           var animating = true;
