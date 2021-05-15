@@ -41,6 +41,7 @@
     <script>
 			var canvas = document.getElementById("renderCanvas");
 
+      var globalBarrel = null;
 			var engine = null;
 			var scene = null;
 			var sceneToRender = null;
@@ -153,6 +154,7 @@
                 keydown = true;
             }
             if (inputMap["s"]) {
+              globalBarrel.explosion();
                 hero.moveWithCollisions(hero.forward.scaleInPlace(-heroSpeedBackwards));
                 keydown = true;
             }
@@ -208,12 +210,27 @@
       function importMeshes()
       {
         // Importing barrel
-        BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "ExplodingBarrel.glb", scene, function (meshes) {
+        globalBarrel = BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "ExplodingBarrel.glb", scene, function (meshes) {
           var barrel = meshes[0];
           barrel.scaling.scaleInPlace(0.02);
           barrel.position.x = 25;
           barrel.position.y = -0.15;
         });
+        globalBarrel.explosionSound = new BABYLON.Sound("explosion","assets/sound-effects/explosion.wav",scene);
+
+        globalBarrel.explosion = () => {
+          BABYLON.ParticleHelper.CreateAsync("explosion", scene).then(
+                  (set) => {
+                    console.log(set);
+                    set.systems.forEach((s) => {
+                      s.disposeOnStop = true;
+                      s.emitter = new BABYLON.Vector3(25,-0.15,0);
+                    });
+                    set.start();
+                  }
+              );
+              globalBarrel.explosionSound.play();
+        }
 
         // Importing dragon
         BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/Georgia-Tech-Dragon/", "dragon.glb", scene, function (meshes) {
