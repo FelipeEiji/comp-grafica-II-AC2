@@ -45,8 +45,12 @@
 			var engine = null;
 			var scene = null;
 			var sceneToRender = null;
-      // Keyboard events
       var inputMap = {};
+      var globalHero = null;
+      var radio = null;
+      var hero = null;
+      var heroImpostor = null;
+      var barrel = null;
 
 			var createDefaultEngine = function() { 
 				return new BABYLON.Engine(canvas, true, { 
@@ -67,11 +71,13 @@
         camera.upperRadiusLimit = 20;
         camera.wheelDeltaPercentage = 0.01;
         camera.upperBetaLimit = Math.PI / 2.2;
-
+        heroImpostor = BABYLON.MeshBuilder.CreateBox("heroImpostor", {width:0.6, height:4, depth:0.6}, scene);
 				createCenario();
         showGUIInstructions();
         createCharacter(camera);
-        importMeshes();
+        importRandomMeshes();
+        importCollectableMeshes();
+        setTimeout(() => { checkIntersaction(); }, 5000);
 
 				return scene;
 			}
@@ -119,10 +125,10 @@
           inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
         }));
         
-        BABYLON.SceneLoader.ImportMesh("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb", scene, function (newMeshes, particleSystems, skeletons, animationGroups) {
+        globalHero = BABYLON.SceneLoader.ImportMesh("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb", scene, function (newMeshes, particleSystems, skeletons, animationGroups) {
           
-          var hero = newMeshes[0];
-
+          hero = newMeshes[0];          
+          
           //Scale the model down        
           hero.scaling.scaleInPlace(0.1);
           hero.position.x = 20;
@@ -150,21 +156,20 @@
             var keydown = false;
             //Manage the movements of the character (e.g. position, direction)
             if (inputMap["w"]) {
-                hero.moveWithCollisions(hero.forward.scaleInPlace(heroSpeed));
-                keydown = true;
+              hero.moveWithCollisions(hero.forward.scaleInPlace(heroSpeed));
+              keydown = true;
             }
             if (inputMap["s"]) {
-              globalBarrel.explosion();
-                hero.moveWithCollisions(hero.forward.scaleInPlace(-heroSpeedBackwards));
-                keydown = true;
+              hero.moveWithCollisions(hero.forward.scaleInPlace(-heroSpeedBackwards));
+              keydown = true;
             }
             if (inputMap["a"]) {
-                hero.rotate(BABYLON.Vector3.Up(), -heroRotationSpeed);
-                keydown = true;
+              hero.rotate(BABYLON.Vector3.Up(), -heroRotationSpeed);
+              keydown = true;
             }
             if (inputMap["d"]) {
-                hero.rotate(BABYLON.Vector3.Up(), heroRotationSpeed);
-                keydown = true;
+              hero.rotate(BABYLON.Vector3.Up(), heroRotationSpeed);
+              keydown = true;
             }
             if (inputMap["b"]) {
                 keydown = true;
@@ -175,17 +180,17 @@
               if (!animating) {
                 animating = true;
                 if (inputMap["s"]) {
-                    //Walk backwards
-                    walkBackAnim.start(true, 1.0, walkBackAnim.from, walkBackAnim.to, false);
+                  //Walk backwards
+                  walkBackAnim.start(true, 1.0, walkBackAnim.from, walkBackAnim.to, false);
                 }
                 else if
-                    (inputMap["b"]) {
-                    //Samba!
-                    sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+                  (inputMap["b"]) {
+                  //Samba!
+                  sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
                 }
                 else {
-                    //Walk
-                    walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
+                  //Walk
+                  walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
                 }
               }
             }
@@ -207,21 +212,21 @@
         });
       }
 
-      function importMeshes()
+      function importRandomMeshes()
       {
         // Importing barrel
         globalBarrel = BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "ExplodingBarrel.glb", scene, function (meshes) {
-          var barrel = meshes[0];
+          barrel = meshes[0];
           barrel.scaling.scaleInPlace(0.02);
           barrel.position.x = 25;
           barrel.position.y = -0.15;
         });
-        globalBarrel.explosionSound = new BABYLON.Sound("explosion","assets/sound-effects/explosion.wav",scene);
+
+        globalBarrel.explosionSound = new BABYLON.Sound("explosion","assets/sound-effects/explosion.wav",scene, null, {volume: 0.07});
 
         globalBarrel.explosion = () => {
           BABYLON.ParticleHelper.CreateAsync("explosion", scene).then(
                   (set) => {
-                    console.log(set);
                     set.systems.forEach((s) => {
                       s.disposeOnStop = true;
                       s.emitter = new BABYLON.Vector3(25,-0.15,0);
@@ -251,7 +256,7 @@
         });
 
         // Importing bird
-        BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "seagulf.glb", scene, function (meshes) {          
+        BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "seagulf.glb", scene, function (meshes) {
           var bird = meshes[0];
           bird.scaling.scaleInPlace(0.002);
           bird.position.x = -0.5;
@@ -285,6 +290,30 @@
           ball.position.y = 1.5;
           ball.position.z = -16;
         });
+      }
+      
+      function importCollectableMeshes()
+      {
+        BABYLON.SceneLoader.ImportMesh("", "scenes/", "BoomBox.glb", scene, function (meshes) {
+          radio = meshes[0];
+          radio.scaling.scaleInPlace(50);
+          radio.position.x = 20;
+          radio.position.y = 1;
+          radio.position.z = 4;
+        });
+      }
+
+      function checkIntersaction()
+      {
+        scene.registerBeforeRender(function () {
+          console.log("entrou");
+          // console.log(hero.position);
+          // console.log(radio.position);
+          if (hero.intersectsMesh(radio, true))
+          {
+            console.log("Colide!");
+          }
+        });       
       }
 
 			window.initFunction = async function() {               
