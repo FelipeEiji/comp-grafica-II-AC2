@@ -44,6 +44,8 @@
 			var engine = null;
 			var scene = null;
 			var sceneToRender = null;
+      // Keyboard events
+      var inputMap = {};
 
 			var createDefaultEngine = function() { 
 				return new BABYLON.Engine(canvas, true, { 
@@ -54,7 +56,7 @@
 			};
 
 			const createScene =  () => {
-				const scene = new BABYLON.Scene(engine);
+				scene = new BABYLON.Scene(engine);
 				
 				/**** Set camera and light *****/
 				const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 200, new BABYLON.Vector3(0, 0, 0));
@@ -62,6 +64,8 @@
 				const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(4, 1, 0));
 
 				createCenario();
+        showGUIInstructions();
+        createCharacter(camera);
 
 				return scene;
 			}
@@ -79,12 +83,111 @@
         var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:150}, scene);
         var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
         skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("assets/skybox/skybox4", scene);
+        // In the path argument is the skybox images folder, and "skybox4" references all the 6 images that composes it
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("assets/skybox/skybox4", scene); 
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         skyboxMaterial.disableLighting = true;
-        skybox.material = skyboxMaterial;	
-    
+        skybox.material = skyboxMaterial;    
 			}
+
+      function showGUIInstructions()
+      {
+        var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+        var instructions = new BABYLON.GUI.TextBlock();
+        instructions.text = "Move w/ WASD keys look with the mouse";
+        instructions.color = "red";
+        instructions.fontSize = 16;
+        instructions.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER
+        instructions.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
+        advancedTexture.addControl(instructions);
+      }
+
+      function createCharacter(camera)
+      {
+        BABYLON.SceneLoader.ImportMesh("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb", scene, function (newMeshes, particleSystems, skeletons, animationGroups) {
+          var hero = newMeshes[0];
+
+          //Scale the model down        
+          hero.scaling.scaleInPlace(0.1);
+
+          //Lock camera on the character 
+          camera.target = hero;
+
+          //Hero character variables 
+          var heroSpeed = 0.03;
+          var heroSpeedBackwards = 0.01;
+          var heroRotationSpeed = 0.1;
+
+          var animating = true;
+
+          const walkAnim = scene.getAnimationGroupByName("Walking");
+          const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
+          const idleAnim = scene.getAnimationGroupByName("Idle");
+          const sambaAnim = scene.getAnimationGroupByName("Samba");
+
+          
+
+          //Rendering loop (executed for everyframe)
+          scene.onBeforeRenderObservable.add(() => {
+            var keydown = false;
+            //Manage the movements of the character (e.g. position, direction)
+            if (inputMap["w"]) {
+                hero.moveWithCollisions(hero.forward.scaleInPlace(heroSpeed));
+                keydown = true;
+            }
+            if (inputMap["s"]) {
+                hero.moveWithCollisions(hero.forward.scaleInPlace(-heroSpeedBackwards));
+                keydown = true;
+            }
+            if (inputMap["a"]) {
+                hero.rotate(BABYLON.Vector3.Up(), -heroRotationSpeed);
+                keydown = true;
+            }
+            if (inputMap["d"]) {
+                hero.rotate(BABYLON.Vector3.Up(), heroRotationSpeed);
+                keydown = true;
+            }
+            if (inputMap["b"]) {
+                keydown = true;
+            }
+
+            //Manage animations to be played  
+            if (keydown) {
+              if (!animating) {
+                animating = true;
+                if (inputMap["s"]) {
+                    //Walk backwards
+                    walkBackAnim.start(true, 1.0, walkBackAnim.from, walkBackAnim.to, false);
+                }
+                else if
+                    (inputMap["b"]) {
+                    //Samba!
+                    sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+                }
+                else {
+                    //Walk
+                    walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
+                }
+              }
+            }
+            else {
+              if (animating) {
+                //Default animation is idle when no key is down     
+                idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
+
+                //Stop all animations besides Idle Anim when no key is down
+                sambaAnim.stop();
+                walkAnim.stop();
+                walkBackAnim.stop();
+
+                //Ensure animation are played only once per rendering loop
+                animating = false;
+              }
+            }
+          });
+        });
+
+    }
 
 			window.initFunction = async function() {               
 				var asyncEngineCreation = async function() {
