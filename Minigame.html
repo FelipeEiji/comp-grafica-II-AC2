@@ -62,14 +62,15 @@
 				const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 200, new BABYLON.Vector3(0, 0, 0));
 				camera.attachControl(canvas, true);
 				const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(4, 1, 0));
-        camera.lowerRadiusLimit = 10;
-        camera.upperRadiusLimit = 10;
+        camera.lowerRadiusLimit = 20;
+        camera.upperRadiusLimit = 20;
         camera.wheelDeltaPercentage = 0.01;
         camera.upperBetaLimit = Math.PI / 2.2;
 
 				createCenario();
         showGUIInstructions();
         createCharacter(camera);
+        importMeshes();
 
 				return scene;
 			}
@@ -99,7 +100,7 @@
       {
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
         var instructions = new BABYLON.GUI.TextBlock();
-        instructions.text = "Move: WASD | Look: mouse | Samba: B";
+        instructions.text = "Move: WASD | Look arround: Mouse | Samba: B";
         instructions.color = "red";
         instructions.fontSize = 16;
         instructions.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER
@@ -116,12 +117,15 @@
         scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
           inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
         }));
+        
         BABYLON.SceneLoader.ImportMesh("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb", scene, function (newMeshes, particleSystems, skeletons, animationGroups) {
+          
           var hero = newMeshes[0];
 
           //Scale the model down        
           hero.scaling.scaleInPlace(0.1);
           hero.position.x = 20;
+          hero.position.y = -0.2;
 
           //Lock camera on the character 
           camera.target = hero;
@@ -199,8 +203,72 @@
             }
           });
         });
+      }
 
-    }
+      function importMeshes()
+      {
+        // Importing barrel
+        BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "ExplodingBarrel.glb", scene, function (meshes) {
+          var barrel = meshes[0];
+          barrel.scaling.scaleInPlace(0.02);
+          barrel.position.x = 25;
+          barrel.position.y = -0.15;
+        });
+
+        // Importing dragon
+        BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/Georgia-Tech-Dragon/", "dragon.glb", scene, function (meshes) {
+          var dragon = meshes[0];
+          dragon.scaling.scaleInPlace(20);
+          dragon.position.x = -20;
+          dragon.position.y = -0.15;
+          dragon.position.z = 4;          
+        });
+        
+        // Importing house
+        BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "haunted_house.glb", scene, function (meshes) {
+          var house = meshes[0];
+          house.scaling.scaleInPlace(60);
+          house.position.x = 0;
+          house.position.y = -0.15;
+          house.position.z = -20;  
+        });
+
+        // Importing bird
+        BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "seagulf.glb", scene, function (meshes) {          
+          var bird = meshes[0];
+          bird.scaling.scaleInPlace(0.002);
+          bird.position.x = -0.5;
+          bird.position.y = 3.2;
+          bird.position.z = 6;        
+        });
+
+        // Importing plane
+        BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "aerobatic_plane.glb", scene, function (meshes) { 
+          var plane = meshes[0];
+          plane.scaling.scaleInPlace(30);
+          plane.position.x = 2;
+          plane.position.y = 5;
+          plane.position.z = 0;
+        });
+        
+        // Importing fan
+        BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/vintageDeskFan/", "vintageFan_animated.gltf", scene, function (meshes) {          
+          var fan = meshes[0];
+          fan.scaling.scaleInPlace(0.04);
+          fan.position.x = -15;
+          fan.position.y = 1.15;
+          fan.position.z = -16;
+        });
+
+        // Importing ball
+        BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/shaderBall/", "BabylonShaderBall_Simple.gltf", scene, function (meshes) {          
+          var ball = meshes[0];
+          ball.scaling.scaleInPlace(0.5);
+          ball.position.x = 20;
+          ball.position.y = 1.5;
+          ball.position.z = -16;
+        });
+      }
 
 			window.initFunction = async function() {               
 				var asyncEngineCreation = async function() {
