@@ -68,15 +68,21 @@
 
 			function createCenario()
 			{
-				//Create large ground 
-				const principalGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("principalGround", "assets/terraincircle2.jpg", 
+				// Creating the ground with texture
+				const principalGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("principalGround", "assets/terrain.jpg", 
 																																					{width:150, height:150, subdivisions: 40, minHeight:0, maxHeight: 20});
-        
-        //Create texture
         const principalGroundMat = new BABYLON.StandardMaterial("principalGroundMat");
-        principalGroundMat.diffuseTexture = new BABYLON.Texture("assets/sand.jpg");
-
+        principalGroundMat.diffuseTexture = new BABYLON.Texture("assets/snow.jpg");
         principalGround.material = principalGroundMat;
+
+        // Creating skybox
+        var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:150}, scene);
+        var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+        skyboxMaterial.backFaceCulling = false;
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("assets/skybox/skybox4", scene);
+        skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+        skyboxMaterial.disableLighting = true;
+        skybox.material = skyboxMaterial;	
     
 			}
 
