@@ -55,6 +55,7 @@
       var points = 0;
       var win = false;
       var playAgainButton = null;
+      var sambaGUI = null;
 
       // Radios to be collected
       var radio1 = null;
@@ -149,6 +150,24 @@
         instructions.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER
         instructions.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
         advancedTexture.addControl(instructions);
+
+        sambaGUI = new BABYLON.GUI.TextBlock();
+        sambaGUI.text = "Não deixe o samba morrer!\nColete todos os radios em ordem crescente de tamanho!";
+        sambaGUI.fontSize = 24;
+        sambaGUI.color = "blue";
+        sambaGUI.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        sambaGUI.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        advancedTexture.addControl(sambaGUI);
+
+        winGUI = new BABYLON.GUI.TextBlock();
+        winGUI.isVisible = false;
+        winGUI.text = "Você salvou o samba!";
+        winGUI.fontSize = 100;
+        winGUI.top = -200;
+        winGUI.color = "green";
+        advancedTexture.addControl(winGUI);
+
+        console.log(BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP);
         pointsGUI = new BABYLON.GUI.TextBlock();
         pointsGUI.text = points + "/10";
         pointsGUI.color = "black";
@@ -158,7 +177,7 @@
         pointsGUI.updatePoints = (newPoint)=>{
           points = newPoint;
           pointsGUI.text = `${points}/10`;
-          if(newPoint === 10){
+          if(newPoint === 1){
             if(!win){
               win = true;
               scene.actionManager = null;
@@ -166,13 +185,16 @@
               inputMap["b"] = true;
               victorySound.play();
               hero.dance();
+              sambaGUI.isVisible = false;
               playAgainButton.isVisible = true;
+              winGUI.isVisible = true;
             }
           }
         }
         advancedTexture.addControl(pointsGUI);
 
         playAgainButton = BABYLON.GUI.Button.CreateSimpleButton("playAgain", "Reiniciar Jogo");
+        playAgainButton.top = 100;
         playAgainButton.isVisible = false;
         playAgainButton.width = 0.1;
         playAgainButton.height = "40px";
