@@ -304,8 +304,98 @@
           radio.scaling.scaleInPlace(20);
           radio.position.x = -5;
           radio.position.y = 1;
+          radio.position.z = 25;
+          radio.id = "radio";
+          radio.rotationQuaternion = null;
+        });
+
+        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+          radio = meshes[0];
+          radio.scaling.scaleInPlace(30);
+          radio.position.x = 0;
+          radio.position.y = 1;
           radio.position.z = 30;
-          radio.id = "1";
+          radio.id = "radio";
+          radio.rotationQuaternion = null;
+        });
+
+        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+          radio = meshes[0];
+          radio.scaling.scaleInPlace(40);
+          radio.position.x = 5;
+          radio.position.y = 1;
+          radio.position.z = 21;
+          radio.id = "radio";
+          radio.rotationQuaternion = null;
+        });
+
+        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+          radio = meshes[0];
+          radio.scaling.scaleInPlace(50);
+          radio.position.x = -10;
+          radio.position.y = 1;
+          radio.position.z = 15;
+          radio.id = "radio";
+          radio.rotationQuaternion = null;
+        });
+        
+        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+          radio = meshes[0];
+          radio.scaling.scaleInPlace(60);
+          radio.position.x = 15;
+          radio.position.y = 1;
+          radio.position.z = 18;
+          radio.id = "radio";
+          radio.rotationQuaternion = null;
+        });
+
+        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+          radio = meshes[0];
+          radio.scaling.scaleInPlace(70);
+          radio.position.x = 20;
+          radio.position.y = 1;
+          radio.position.z = -5;
+          radio.id = "radio";
+          radio.rotationQuaternion = null;
+        });
+
+        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+          radio = meshes[0];
+          radio.scaling.scaleInPlace(80);
+          radio.position.x = 15;
+          radio.position.y = 2;
+          radio.position.z = -15;
+          radio.id = "radio";
+          radio.rotationQuaternion = null;
+        });
+
+        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+          radio = meshes[0];
+          radio.scaling.scaleInPlace(90);
+          radio.position.x = -15;
+          radio.position.y = 1;
+          radio.position.z = 0;
+          radio.id = "radio";
+          radio.rotationQuaternion = null;
+        });
+
+        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+          radio = meshes[0];
+          radio.scaling.scaleInPlace(100);
+          radio.position.x = -17;
+          radio.position.y = 1.5;
+          radio.position.z = 15;
+          radio.id = "radio";
+          radio.rotationQuaternion = null;
+        });
+        
+        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+          radio = meshes[0];
+          radio.scaling.scaleInPlace(110);
+          radio.position.x = 1;
+          radio.position.y = 1.5;
+          radio.position.z = -15;
+          radio.id = "radio";
           radio.rotationQuaternion = null;
         });
       }
@@ -349,7 +439,7 @@
 			});
 
       function loop() {
-        var radiomesh = scene.getMeshesByID("1");
+        var radiomesh = scene.getMeshesByID("radio");
         var seed = 0;
         radiomesh.forEach(function (mesh) {
           mesh.rotation.y += 0.05;
