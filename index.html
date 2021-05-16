@@ -38,7 +38,7 @@
 	</head>
 	<body>
 		<canvas id="renderCanvas"></canvas>
-    <script>
+    <script async>
 			var canvas = document.getElementById("renderCanvas");
       
       // Global vars
@@ -78,7 +78,7 @@
 
       var collectSound = null;
 
-			var createDefaultEngine = function() { 
+			var createDefaultEngine = async function() { 
 				return new BABYLON.Engine(canvas, true, { 
 					preserveDrawingBuffer: true, 
 					stencil: true,  
@@ -86,7 +86,7 @@
 				}); 
 			};
 
-			const createScene =  () => {
+			const createScene =  async () => {
 				scene = new BABYLON.Scene(engine);
 				
 				/**** Set camera and light *****/
@@ -100,17 +100,17 @@
 
         collectSound = new BABYLON.Sound("collectSound", "assets/sound-effects/collect.wav", scene, null, {volume: 0.07});
 
-				createCenario();
-        showGUIInstructions();
-        createCharacter(camera);
-        importRandomMeshes();
-        importCollectableMeshes();
-        setTimeout(() => { checkIntersaction(); }, 6000);
+				await createCenario();
+        await showGUIInstructions();
+        await createCharacter(camera);
+        await importRandomMeshes();
+        await importCollectableMeshes();
+        await checkIntersaction();
 
 				return scene;
 			}
 
-			function createCenario()
+			async function createCenario()
 			{
 				// Creating the ground with texture
 				const principalGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("principalGround", "assets/terrain.jpg", 
@@ -129,9 +129,11 @@
         skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
         skyboxMaterial.disableLighting = true;
         skybox.material = skyboxMaterial;    
+        console.log(1);
+        return;
 			}
 
-      function showGUIInstructions()
+      async function showGUIInstructions()
       {
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
         var instructions = new BABYLON.GUI.TextBlock();
@@ -141,9 +143,11 @@
         instructions.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER
         instructions.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
         advancedTexture.addControl(instructions);
+        console.log(2);
+        return;
       }
 
-      function createCharacter(camera)
+      async function createCharacter(camera)
       {
         scene.actionManager = new BABYLON.ActionManager(scene);
         scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
@@ -237,9 +241,11 @@
             }
           });
         });
+        console.log(3);
+        return;
       }
 
-      function importRandomMeshes()
+      async function importRandomMeshes()
       {
         // Importing barrel
         globalBarrel = BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "ExplodingBarrel.glb", scene, function (meshes) {
@@ -324,14 +330,16 @@
           ball.position.y = 1.5;
           ball.position.z = -16;
         });
+        console.log(4);
+        return;
       }
       
-      function importCollectableMeshes()
+      async function importCollectableMeshes()
       {
         var mat = new BABYLON.StandardMaterial("mat", scene);
         mat.alpha = 0;
 
-        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+        await BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio1 = meshes[0];
           radio1.scaling.scaleInPlace(20);
           radio1.position.x = -5;
@@ -346,7 +354,7 @@
           radio1Box.material = mat;
         });
 
-        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+        await BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio2 = meshes[0];
           radio2.scaling.scaleInPlace(30);
           radio2.position.x = 0;
@@ -361,7 +369,7 @@
           radio2Box.material = mat;
         });
 
-        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+        await BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio3 = meshes[0];
           radio3.scaling.scaleInPlace(40);
           radio3.position.x = 5;
@@ -376,7 +384,7 @@
           radio3Box.material = mat;
         });
 
-        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+        await BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio4 = meshes[0];
           radio4.scaling.scaleInPlace(50);
           radio4.position.x = -10;
@@ -391,7 +399,7 @@
           radio4Box.material = mat;
         });
         
-        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+        await BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio5 = meshes[0];
           radio5.scaling.scaleInPlace(60);
           radio5.position.x = 15;
@@ -406,7 +414,7 @@
           radio5Box.material = mat;
         });
 
-        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+        await BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio6 = meshes[0];
           radio6.scaling.scaleInPlace(70);
           radio6.position.x = 20;
@@ -421,7 +429,7 @@
           radio6Box.material = mat;
         });
 
-        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+        await BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio7 = meshes[0];
           radio7.scaling.scaleInPlace(80);
           radio7.position.x = 15;
@@ -436,7 +444,7 @@
           radio7Box.material = mat;
         });
 
-        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+        await BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio8 = meshes[0];
           radio8.scaling.scaleInPlace(90);
           radio8.position.x = -15;
@@ -451,7 +459,7 @@
           radio8Box.material = mat;
         });
 
-        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+        await BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio9 = meshes[0];
           radio9.scaling.scaleInPlace(100);
           radio9.position.x = -17;
@@ -466,7 +474,7 @@
           radio9Box.material = mat;
         });
         
-        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
+        await BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio0 = meshes[0];
           radio0.scaling.scaleInPlace(110);
           radio0.position.x = 1;
@@ -480,9 +488,12 @@
           radio0Box.position.z = radio0.position.z;      
           radio0Box.material = mat;
         });
+        console.log(5);
+
+        return;
       }
 
-      function createAnimation()
+      async function createAnimation()
       {
         //Position Animation
         UpDownAnimat = new BABYLON.Animation("UpDown", "position.y", 100, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
@@ -517,9 +528,9 @@
 
       }     
 
-      function checkIntersaction()
+      async function checkIntersaction()
       {
-        scene.registerBeforeRender(function () {
+        scene.registerBeforeRender(async function () {
           if (hero.intersectsMesh(barrelBox, true))
           {
             if (barrel.isEnabled()){
@@ -538,7 +549,7 @@
                 collectSound.play();
                 radio1played = true;
               }              
-              setTimeout(() => { radio1.setEnabled(false); }, 1000);
+               radio1.setEnabled(false);
             }
           }
           if (hero.intersectsMesh(radio2Box, true) && !radio1.isEnabled())
@@ -667,22 +678,23 @@
               setTimeout(() => { radio0.setEnabled(false); }, 1000);
             }
           }
-        });       
+        });
+        console.log(6);
       }
 
 			window.initFunction = async function() {               
 				var asyncEngineCreation = async function() {
 						try {
-						return createDefaultEngine();
+						return await createDefaultEngine();
 						} catch(e) {
 						console.log("the available createEngine function failed. Creating the default engine instead");
-						return createDefaultEngine();
+						return await createDefaultEngine();
 						}
 				}
 
 				window.engine = await asyncEngineCreation();
         if (!engine) throw 'engine should not be null.';
-        window.scene = createScene();
+        window.scene =  await createScene();
 			};
 
 			initFunction().then(() => {sceneToRender = scene        
