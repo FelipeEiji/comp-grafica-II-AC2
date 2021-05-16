@@ -64,6 +64,8 @@
       var radio9 = null;
       var radio0 = null;
 
+      var collectSound = null;
+
 			var createDefaultEngine = function() { 
 				return new BABYLON.Engine(canvas, true, { 
 					preserveDrawingBuffer: true, 
@@ -83,6 +85,8 @@
         camera.upperRadiusLimit = 20;
         camera.wheelDeltaPercentage = 0.01;
         camera.upperBetaLimit = Math.PI / 2.2;
+
+        collectSound = new BABYLON.Sound("collectSound", "assets/sound-effects/collect.wav", scene, null, {volume: 0.07});
 
 				createCenario();
         showGUIInstructions();
@@ -428,7 +432,7 @@
           radio8.position.z = 0;
           radio8.id = "radio8";
           radio8.rotationQuaternion = null;
-          radio8Box = BABYLON.MeshBuilder.CreateBox("radio8Box", {size:1}, scene);
+          radio8Box = BABYLON.MeshBuilder.CreateBox("radio8Box", {size:2}, scene);
           radio8Box.position.x = radio8.position.x;
           radio8Box.position.y = radio8.position.y - 1;
           radio8Box.position.z = radio8.position.z;      
@@ -443,7 +447,7 @@
           radio9.position.z = 15;
           radio9.id = "radio9";
           radio9.rotationQuaternion = null;
-          radio9Box = BABYLON.MeshBuilder.CreateBox("radio9Box", {size:1}, scene);
+          radio9Box = BABYLON.MeshBuilder.CreateBox("radio9Box", {size:2}, scene);
           radio9Box.position.x = radio9.position.x;
           radio9Box.position.y = radio9.position.y - 1.5;
           radio9Box.position.z = radio9.position.z;      
@@ -458,13 +462,48 @@
           radio0.position.z = -15;
           radio0.id = "radio0";
           radio0.rotationQuaternion = null;
-          radio0Box = BABYLON.MeshBuilder.CreateBox("radio0Box", {size:1}, scene);
+          radio0Box = BABYLON.MeshBuilder.CreateBox("radio0Box", {size:3}, scene);
           radio0Box.position.x = radio0.position.x;
           radio0Box.position.y = radio0.position.y - 1.5;
           radio0Box.position.z = radio0.position.z;      
           radio0Box.material = mat;
         });
       }
+
+      function createAnimation()
+      {
+        //Position Animation
+        UpDownAnimat = new BABYLON.Animation("UpDown", "position.y", 100, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+        var keyFramesUpDown = []; 
+
+        keyFramesUpDown.push({
+          frame: 0,
+          value: startAnimationPos
+        });
+
+        keyFramesUpDown.push({
+          frame: 20,
+          value: startAnimationPos - 0.5
+        });
+
+        keyFramesUpDown.push({
+          frame: 40,
+          value: 0
+        });
+
+        keyFramesUpDown.push({
+          frame: 50,
+          value: startAnimationPos - 0.5
+        });
+
+        keyFramesUpDown.push({
+          frame: 80,
+          value: startAnimationPos + 1
+        });
+
+        UpDownAnimat.setKeys(keyFramesUpDown);
+
+      }     
 
       function checkIntersaction()
       {
@@ -478,62 +517,103 @@
           }
           if (hero.intersectsMesh(radio1Box, true))
           {
-            if (radio1.isEnabled()){
-              radio1.setEnabled(false);
+            if (radio1.isEnabled()){              
+              startAnimationPos = radio1.position.y;
+              createAnimation();
+              scene.beginDirectAnimation(radio1, [UpDownAnimat], 0, 100, true);
+
+              collectSound.play();
+              setTimeout(() => { radio1.setEnabled(false); }, 1000);
             }
           }
           if (hero.intersectsMesh(radio2Box, true) && !radio1.isEnabled())
           {
             if (radio2.isEnabled()){
-              radio2.setEnabled(false);
+              startAnimationPos = radio2.position.y;
+              createAnimation();
+              scene.beginDirectAnimation(radio2, [UpDownAnimat], 0, 100, true);
+              collectSound.play();
+              setTimeout(() => { radio2.setEnabled(false); }, 1000);
             }
           }
           if (hero.intersectsMesh(radio3Box, true) && !radio2.isEnabled())
           {
             if (radio3.isEnabled()){
-              radio3.setEnabled(false);
+              startAnimationPos = radio3.position.y;
+              createAnimation();
+              scene.beginDirectAnimation(radio3, [UpDownAnimat], 0, 100, true);
+              collectSound.play();
+              setTimeout(() => { radio3.setEnabled(false); }, 1000);
             }
           }
           if (hero.intersectsMesh(radio4Box, true) && !radio3.isEnabled())
           {
             if (radio4.isEnabled()){
-              radio4.setEnabled(false);
+              startAnimationPos = radio4.position.y;
+              createAnimation();
+              scene.beginDirectAnimation(radio4, [UpDownAnimat], 0, 100, true);
+              collectSound.play();
+              setTimeout(() => { radio4.setEnabled(false); }, 1000);
             }
           }
           if (hero.intersectsMesh(radio5Box, true) && !radio4.isEnabled())
           {
             if (radio5.isEnabled()){
-              radio5.setEnabled(false);
+              startAnimationPos = radio5.position.y;
+              createAnimation();
+              scene.beginDirectAnimation(radio5, [UpDownAnimat], 0, 100, true);
+              collectSound.play();
+              setTimeout(() => { radio5.setEnabled(false); }, 1000);
             }
           }
           if (hero.intersectsMesh(radio6Box, true) && !radio5.isEnabled())
           {
             if (radio6.isEnabled()){
-              radio6.setEnabled(false);
+              startAnimationPos = radio6.position.y;
+              createAnimation();
+              scene.beginDirectAnimation(radio6, [UpDownAnimat], 0, 100, true);
+              collectSound.play();
+              setTimeout(() => { radio6.setEnabled(false); }, 1000);
             }
           }
           if (hero.intersectsMesh(radio7Box, true) && !radio6.isEnabled())
           {
             if (radio7.isEnabled()){
-              radio7.setEnabled(false);
+              startAnimationPos = radio7.position.y;
+              createAnimation();
+              scene.beginDirectAnimation(radio7, [UpDownAnimat], 0, 100, true);
+              collectSound.play();
+              setTimeout(() => { radio7.setEnabled(false); }, 1000);
             }
           }
           if (hero.intersectsMesh(radio8Box, true) && !radio7.isEnabled())
           {
             if (radio8.isEnabled()){
-              radio8.setEnabled(false);
+              startAnimationPos = radio8.position.y;
+              createAnimation();
+              scene.beginDirectAnimation(radio8, [UpDownAnimat], 0, 100, true);
+              collectSound.play();
+              setTimeout(() => { radio8.setEnabled(false); }, 1000);
             }
           }
           if (hero.intersectsMesh(radio9Box, true) && !radio8.isEnabled())
           {
             if (radio9.isEnabled()){
-              radio9.setEnabled(false);
+              startAnimationPos = radio9.position.y;
+              createAnimation();
+              scene.beginDirectAnimation(radio9, [UpDownAnimat], 0, 100, true);
+              collectSound.play();
+              setTimeout(() => { radio9.setEnabled(false); }, 1000);
             }
           }
           if (hero.intersectsMesh(radio0Box, true) && !radio9.isEnabled())
           {
             if (radio0.isEnabled()){
-              radio0.setEnabled(false);
+              startAnimationPos = radio0.position.y;
+              createAnimation();
+              scene.beginDirectAnimation(radio0, [UpDownAnimat], 0, 100, true);
+              collectSound.play();
+              setTimeout(() => { radio0.setEnabled(false); }, 1000);
             }
           }
         });       
