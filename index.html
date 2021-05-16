@@ -49,8 +49,8 @@
       var globalHero = null;
       var radio = null;
       var hero = null;
-      var heroImpostor = null;
       var barrel = null;
+      var barrelbox = null;
 
 			var createDefaultEngine = function() { 
 				return new BABYLON.Engine(canvas, true, { 
@@ -71,13 +71,12 @@
         camera.upperRadiusLimit = 20;
         camera.wheelDeltaPercentage = 0.01;
         camera.upperBetaLimit = Math.PI / 2.2;
-        heroImpostor = BABYLON.MeshBuilder.CreateBox("heroImpostor", {width:0.6, height:4, depth:0.6}, scene);
 				createCenario();
         showGUIInstructions();
         createCharacter(camera);
         importRandomMeshes();
         importCollectableMeshes();
-        setTimeout(() => { checkIntersaction(); }, 5000);
+        setTimeout(() => { checkIntersaction(); }, 6000);
 
 				return scene;
 			}
@@ -127,8 +126,7 @@
         
         globalHero = BABYLON.SceneLoader.ImportMesh("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb", scene, function (newMeshes, particleSystems, skeletons, animationGroups) {
           
-          hero = newMeshes[0];          
-          
+          hero = newMeshes[0];
           //Scale the model down        
           hero.scaling.scaleInPlace(0.1);
           hero.position.x = 20;
@@ -220,8 +218,15 @@
           barrel.scaling.scaleInPlace(0.02);
           barrel.position.x = 25;
           barrel.position.y = -0.15;
-        });
-
+          barrelbox = BABYLON.MeshBuilder.CreateBox("barrelbox", {size:1}, scene);
+          barrelbox.position.x = barrel.position.x;
+          barrelbox.position.y = barrel.position.y;
+          var mat = new BABYLON.StandardMaterial("mat", scene);
+          mat.alpha = 0;
+          barrelbox.material = mat;
+        });        
+        
+        // Setting explode function for barrel
         globalBarrel.explosionSound = new BABYLON.Sound("explosion","assets/sound-effects/explosion.wav",scene, null, {volume: 0.07});
 
         globalBarrel.explosion = () => {
@@ -261,7 +266,7 @@
           bird.scaling.scaleInPlace(0.002);
           bird.position.x = -0.5;
           bird.position.y = 3.2;
-          bird.position.z = 6;        
+          bird.position.z = 6;
         });
 
         // Importing plane
@@ -294,24 +299,27 @@
       
       function importCollectableMeshes()
       {
-        BABYLON.SceneLoader.ImportMesh("", "scenes/", "BoomBox.glb", scene, function (meshes) {
+        BABYLON.SceneLoader.ImportMesh("", "objects/", "BoomBox.glb", scene, function (meshes) {
           radio = meshes[0];
-          radio.scaling.scaleInPlace(50);
-          radio.position.x = 20;
+          radio.scaling.scaleInPlace(20);
+          radio.position.x = -5;
           radio.position.y = 1;
-          radio.position.z = 4;
+          radio.position.z = 30;
+          radio.id = "1";
+          radio.rotationQuaternion = null;
         });
       }
 
       function checkIntersaction()
       {
         scene.registerBeforeRender(function () {
-          console.log("entrou");
-          // console.log(hero.position);
-          // console.log(radio.position);
-          if (hero.intersectsMesh(radio, true))
+          if (hero.intersectsMesh(barrelbox, true))
           {
-            console.log("Colide!");
+            if (barrel.isEnabled()){
+              globalBarrel.explosion();
+              barrel.setEnabled(false);
+              barrelbox.setEnabled(false);
+            }
           }
         });       
       }
@@ -333,11 +341,20 @@
 
 			initFunction().then(() => {sceneToRender = scene        
 				engine.runRenderLoop(function () {
-						if (sceneToRender && sceneToRender.activeCamera) {
-								sceneToRender.render();
-						}
+          if (sceneToRender && sceneToRender.activeCamera) {
+            loop();
+            sceneToRender.render();
+          }
 				});
 			});
+
+      function loop() {
+        var radiomesh = scene.getMeshesByID("1");
+        var seed = 0;
+        radiomesh.forEach(function (mesh) {
+          mesh.rotation.y += 0.05;
+        });
+      };
 
 			// Resize
 			window.addEventListener("resize", function () {
