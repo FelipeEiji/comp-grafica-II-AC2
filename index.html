@@ -54,6 +54,7 @@
       var pointsGUI = null;
       var points = 0;
       var win = false;
+      var playAgainButton = null;
 
       // Radios to be collected
       var radio1 = null;
@@ -152,40 +153,36 @@
         pointsGUI.text = points + "/10";
         pointsGUI.color = "black";
         pointsGUI.fontSize = 36;
-        pointsGUI.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT
-        pointsGUI.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-        
+        pointsGUI.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        pointsGUI.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         pointsGUI.updatePoints = (newPoint)=>{
           points = newPoint;
           pointsGUI.text = `${points}/10`;
           if(newPoint === 10){
             if(!win){
-              console.log('a')
               win = true;
               scene.actionManager = null;
               Object.keys(inputMap).forEach(key=>inputMap[key] = false);
               inputMap["b"] = true;
-              keydown = false;
               victorySound.play();
               hero.dance();
+              playAgainButton.isVisible = true;
             }
           }
         }
-
-        var zoomMinusButton = BABYLON.GUI.Button.CreateSimpleButton("ZOOM -", "ZOOM -");
-        zoomMinusButton.width = 0.1;
-        zoomMinusButton.top = 400;
-        zoomMinusButton.left = -120;
-        zoomMinusButton.height = "40px";
-        zoomMinusButton.color = "white";
-        zoomMinusButton.background = "blue";
-        advancedTexture.addControl(zoomMinusButton);
-        zoomMinusButton.onPointerClickObservable.add(function(){
-          if (camera.radius < 40)
-            camera.radius += 10;
-        })
-
         advancedTexture.addControl(pointsGUI);
+
+        playAgainButton = BABYLON.GUI.Button.CreateSimpleButton("playAgain", "Reiniciar Jogo");
+        playAgainButton.isVisible = false;
+        playAgainButton.width = 0.1;
+        playAgainButton.height = "40px";
+        playAgainButton.color = "white";
+        playAgainButton.background = "blue";
+        playAgainButton.cornerRadius = 20;
+        playAgainButton.onPointerClickObservable.add(function(){
+          restartGame();
+        })
+        advancedTexture.addControl(playAgainButton);
         console.log(2);
         return;
       }
