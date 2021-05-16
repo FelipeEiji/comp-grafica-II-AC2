@@ -312,18 +312,15 @@
         
         // Setting explode function for barrel
         globalBarrel.explosionSound = new BABYLON.Sound("explosion","assets/sound-effects/explosion.wav",scene, null, {volume: 0.07});
+        globalBarrel.explosionParticle = await BABYLON.ParticleHelper.CreateAsync("explosion", scene);
+        globalBarrel.explosionParticle.systems.forEach((s)=>{
+          s.disposeOnStop = true;
+          s.emitter = new BABYLON.Vector3(25,-0.15,0);
+        })
 
         globalBarrel.explosion = () => {
-          BABYLON.ParticleHelper.CreateAsync("explosion", scene).then(
-                  (set) => {
-                    set.systems.forEach((s) => {
-                      s.disposeOnStop = true;
-                      s.emitter = new BABYLON.Vector3(25,-0.15,0);
-                    });
-                    set.start();
-                  }
-              );
-              globalBarrel.explosionSound.play();
+          globalBarrel.explosionParticle.start();
+          globalBarrel.explosionSound.play();
         }
 
         // Importing dragon
