@@ -51,6 +51,9 @@
       var hero = null;
       var barrel = null;
       var barrelBox = null;
+      var pointsGUI = null;
+      var points = 0;
+      var win = false;
 
       // Radios to be collected
       var radio1 = null;
@@ -101,7 +104,7 @@
         collectSound = new BABYLON.Sound("collectSound", "assets/sound-effects/collect.wav", scene, null, {volume: 0.07});
 
 				await createCenario();
-        await showGUIInstructions();
+        await createGUI();
         await createCharacter(camera);
         await importRandomMeshes();
         await importCollectableMeshes();
@@ -133,7 +136,7 @@
         return;
 			}
 
-      async function showGUIInstructions()
+      async function createGUI()
       {
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
         var instructions = new BABYLON.GUI.TextBlock();
@@ -143,6 +146,43 @@
         instructions.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER
         instructions.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
         advancedTexture.addControl(instructions);
+        pointsGUI = new BABYLON.GUI.TextBlock();
+        pointsGUI.text = points + "/10";
+        pointsGUI.color = "black";
+        pointsGUI.fontSize = 36;
+        pointsGUI.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT
+        pointsGUI.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+        
+        pointsGUI.updatePoints = (newPoint)=>{
+          points = newPoint;
+          pointsGUI.text = `${points}/10`;
+          if(newPoint === 10){
+            if(!win){
+              console.log('a')
+              win = true;
+              scene.actionManager = null;
+              Object.keys(inputMap).forEach(key=>inputMap[key] = false);
+              inputMap["b"] = true;
+              keydown = false;
+              hero.dance();
+            }
+          }
+        }
+
+        var zoomMinusButton = BABYLON.GUI.Button.CreateSimpleButton("ZOOM -", "ZOOM -");
+        zoomMinusButton.width = 0.1;
+        zoomMinusButton.top = 400;
+        zoomMinusButton.left = -120;
+        zoomMinusButton.height = "40px";
+        zoomMinusButton.color = "white";
+        zoomMinusButton.background = "blue";
+        advancedTexture.addControl(zoomMinusButton);
+        zoomMinusButton.onPointerClickObservable.add(function(){
+          if (camera.radius < 40)
+            camera.radius += 10;
+        })
+
+        advancedTexture.addControl(pointsGUI);
         console.log(2);
         return;
       }
@@ -180,7 +220,13 @@
           const idleAnim = scene.getAnimationGroupByName("Idle");
           const sambaAnim = scene.getAnimationGroupByName("Samba");
 
-          
+          //Expose samba animation;
+          hero.dance = () =>{
+                idleAnim.stop();
+                walkAnim.stop();
+                walkBackAnim.stop();
+                sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+          }
 
           //Rendering loop (executed for everyframe)
           scene.onBeforeRenderObservable.add(() => {
@@ -525,7 +571,7 @@
         });
 
         UpDownAnimat.setKeys(keyFramesUpDown);
-
+        return;
       }     
 
       async function checkIntersaction()
@@ -549,7 +595,8 @@
                 collectSound.play();
                 radio1played = true;
               }              
-               radio1.setEnabled(false);
+              setTimeout(() => { radio1.setEnabled(false); }, 1000);
+              pointsGUI.updatePoints(1); 
             }
           }
           if (hero.intersectsMesh(radio2Box, true) && !radio1.isEnabled())
@@ -564,6 +611,7 @@
                 radio2played = true;
               }   
               setTimeout(() => { radio2.setEnabled(false); }, 1000);
+              pointsGUI.updatePoints(2); 
             }
           }
           if (hero.intersectsMesh(radio3Box, true) && !radio2.isEnabled())
@@ -578,6 +626,7 @@
                 radio3played = true;
               }   
               setTimeout(() => { radio3.setEnabled(false); }, 1000);
+              pointsGUI.updatePoints(3); 
             }
           }
           if (hero.intersectsMesh(radio4Box, true) && !radio3.isEnabled())
@@ -592,6 +641,7 @@
                 radio4played = true;
               }
               setTimeout(() => { radio4.setEnabled(false); }, 1000);
+              pointsGUI.updatePoints(4); 
             }
           }
           if (hero.intersectsMesh(radio5Box, true) && !radio4.isEnabled())
@@ -606,6 +656,7 @@
                 radio5played = true;
               }
               setTimeout(() => { radio5.setEnabled(false); }, 1000);
+              pointsGUI.updatePoints(5); 
             }
           }
           if (hero.intersectsMesh(radio6Box, true) && !radio5.isEnabled())
@@ -620,6 +671,7 @@
                 radio6played = true;
               }
               setTimeout(() => { radio6.setEnabled(false); }, 1000);
+              pointsGUI.updatePoints(6); 
             }
           }
           if (hero.intersectsMesh(radio7Box, true) && !radio6.isEnabled())
@@ -634,6 +686,7 @@
                 radio7played = true;
               }
               setTimeout(() => { radio7.setEnabled(false); }, 1000);
+              pointsGUI.updatePoints(7); 
             }
           }
           if (hero.intersectsMesh(radio8Box, true) && !radio7.isEnabled())
@@ -648,6 +701,7 @@
                 radio8played = true;
               }
               setTimeout(() => { radio8.setEnabled(false); }, 1000);
+              pointsGUI.updatePoints(8); 
             }
           }
           if (hero.intersectsMesh(radio9Box, true) && !radio8.isEnabled())
@@ -662,6 +716,7 @@
                 radio9played = true;
               }
               setTimeout(() => { radio9.setEnabled(false); }, 1000);
+              pointsGUI.updatePoints(9); 
             }
           }
           if (hero.intersectsMesh(radio0Box, true) && !radio9.isEnabled())
@@ -676,10 +731,15 @@
                 radio0played = true;
               }
               setTimeout(() => { radio0.setEnabled(false); }, 1000);
+              pointsGUI.updatePoints(10); 
             }
           }
         });
         console.log(6);
+      }
+
+      function restartGame(){
+        window.location.reload();
       }
 
 			window.initFunction = async function() {               
