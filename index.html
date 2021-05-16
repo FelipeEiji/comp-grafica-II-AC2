@@ -348,7 +348,13 @@
           dragon.scaling.scaleInPlace(20);
           dragon.position.x = -20;
           dragon.position.y = -0.15;
-          dragon.position.z = 4;          
+          dragon.position.z = 4;
+          var mat = new BABYLON.StandardMaterial("mat", scene);
+          mat.alpha = 0;
+          var dragonBox = BABYLON.MeshBuilder.CreateBox("dragonBox", {height: 5, width: 3, depth:1.5}, scene);
+          dragonBox.position = dragon.position;
+          dragonBox.material = mat;
+          dragonBox.checkCollisions = true;
         });
         
         // Importing house
@@ -357,7 +363,13 @@
           house.scaling.scaleInPlace(60);
           house.position.x = 0;
           house.position.y = -0.15;
-          house.position.z = -20;  
+          house.position.z = -20;
+          var mat = new BABYLON.StandardMaterial("mat", scene);
+          mat.alpha = 0;
+          var houseBox = BABYLON.MeshBuilder.CreateBox("dragonBox", {height: 5, width: 11, depth:6}, scene);
+          houseBox.position = house.position;
+          houseBox.material = mat;
+          houseBox.checkCollisions = true;
         });
 
         // Importing bird
@@ -385,6 +397,14 @@
           fan.position.x = -15;
           fan.position.y = 1.15;
           fan.position.z = -16;
+          var mat = new BABYLON.StandardMaterial("mat", scene);
+          mat.alpha = 0;
+          var fanBox = BABYLON.MeshBuilder.CreateBox("dragonBox", {size:1}, scene);
+          fanBox.position.x = fan.position.x;
+          fanBox.position.y = 0;
+          fanBox.position.z = fan.position.z;
+          fanBox.material = mat;
+          fanBox.checkCollisions = true;
         });
 
         // Importing ball
@@ -394,6 +414,14 @@
           ball.position.x = 20;
           ball.position.y = 1.5;
           ball.position.z = -16;
+          var mat = new BABYLON.StandardMaterial("mat", scene);
+          mat.alpha = 0;
+          var ballBox = BABYLON.MeshBuilder.CreateBox("dragonBox", {size:5}, scene);
+          ballBox.position.x = ball.position.x;
+          ballBox.position.y = 0;
+          ballBox.position.z = ball.position.z;
+          ballBox.material = mat;
+          ballBox.checkCollisions = true;
         });
         console.log(4);
         return;
