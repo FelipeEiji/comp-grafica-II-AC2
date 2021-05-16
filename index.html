@@ -64,6 +64,18 @@
       var radio9 = null;
       var radio0 = null;
 
+      // Controlling sounds
+      var radio1played = false;
+      var radio2played = false;
+      var radio3played = false;
+      var radio4played = false;
+      var radio5played = false;
+      var radio6played = false;
+      var radio7played = false;
+      var radio8played = false;
+      var radio9played = false;
+      var radio0played = false;
+
       var collectSound = null;
 
 			var createDefaultEngine = function() { 
@@ -521,8 +533,11 @@
               startAnimationPos = radio1.position.y;
               createAnimation();
               scene.beginDirectAnimation(radio1, [UpDownAnimat], 0, 100, true);
-
-              collectSound.play();
+              if (!radio1played)
+              {
+                collectSound.play();
+                radio1played = true;
+              }              
               setTimeout(() => { radio1.setEnabled(false); }, 1000);
             }
           }
@@ -532,7 +547,11 @@
               startAnimationPos = radio2.position.y;
               createAnimation();
               scene.beginDirectAnimation(radio2, [UpDownAnimat], 0, 100, true);
-              collectSound.play();
+              if (!radio2played)
+              {
+                collectSound.play();
+                radio2played = true;
+              }   
               setTimeout(() => { radio2.setEnabled(false); }, 1000);
             }
           }
@@ -542,7 +561,11 @@
               startAnimationPos = radio3.position.y;
               createAnimation();
               scene.beginDirectAnimation(radio3, [UpDownAnimat], 0, 100, true);
-              collectSound.play();
+              if (!radio3played)
+              {
+                collectSound.play();
+                radio3played = true;
+              }   
               setTimeout(() => { radio3.setEnabled(false); }, 1000);
             }
           }
@@ -552,7 +575,11 @@
               startAnimationPos = radio4.position.y;
               createAnimation();
               scene.beginDirectAnimation(radio4, [UpDownAnimat], 0, 100, true);
-              collectSound.play();
+              if (!radio4played)
+              {
+                collectSound.play();
+                radio4played = true;
+              }
               setTimeout(() => { radio4.setEnabled(false); }, 1000);
             }
           }
@@ -562,7 +589,11 @@
               startAnimationPos = radio5.position.y;
               createAnimation();
               scene.beginDirectAnimation(radio5, [UpDownAnimat], 0, 100, true);
-              collectSound.play();
+              if (!radio5played)
+              {
+                collectSound.play();
+                radio5played = true;
+              }
               setTimeout(() => { radio5.setEnabled(false); }, 1000);
             }
           }
@@ -572,7 +603,11 @@
               startAnimationPos = radio6.position.y;
               createAnimation();
               scene.beginDirectAnimation(radio6, [UpDownAnimat], 0, 100, true);
-              collectSound.play();
+              if (!radio6played)
+              {
+                collectSound.play();
+                radio6played = true;
+              }
               setTimeout(() => { radio6.setEnabled(false); }, 1000);
             }
           }
@@ -582,7 +617,11 @@
               startAnimationPos = radio7.position.y;
               createAnimation();
               scene.beginDirectAnimation(radio7, [UpDownAnimat], 0, 100, true);
-              collectSound.play();
+              if (!radio7played)
+              {
+                collectSound.play();
+                radio7played = true;
+              }
               setTimeout(() => { radio7.setEnabled(false); }, 1000);
             }
           }
@@ -592,7 +631,11 @@
               startAnimationPos = radio8.position.y;
               createAnimation();
               scene.beginDirectAnimation(radio8, [UpDownAnimat], 0, 100, true);
-              collectSound.play();
+              if (!radio8played)
+              {
+                collectSound.play();
+                radio8played = true;
+              }
               setTimeout(() => { radio8.setEnabled(false); }, 1000);
             }
           }
@@ -602,7 +645,11 @@
               startAnimationPos = radio9.position.y;
               createAnimation();
               scene.beginDirectAnimation(radio9, [UpDownAnimat], 0, 100, true);
-              collectSound.play();
+              if (!radio9played)
+              {
+                collectSound.play();
+                radio9played = true;
+              }
               setTimeout(() => { radio9.setEnabled(false); }, 1000);
             }
           }
@@ -612,7 +659,11 @@
               startAnimationPos = radio0.position.y;
               createAnimation();
               scene.beginDirectAnimation(radio0, [UpDownAnimat], 0, 100, true);
-              collectSound.play();
+              if (!radio0played)
+              {
+                collectSound.play();
+                radio0played = true;
+              }
               setTimeout(() => { radio0.setEnabled(false); }, 1000);
             }
           }
