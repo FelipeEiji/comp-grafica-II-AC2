@@ -80,6 +80,7 @@
       var radio0played = false;
 
       var collectSound = null;
+      var victorySound = null;
 
 			var createDefaultEngine = async function() { 
 				return new BABYLON.Engine(canvas, true, { 
@@ -102,6 +103,7 @@
         camera.upperBetaLimit = Math.PI / 2.2;
 
         collectSound = new BABYLON.Sound("collectSound", "assets/sound-effects/collect.wav", scene, null, {volume: 0.07});
+        victorySound = new BABYLON.Sound("collectSound", "assets/sound-effects/victory.mp3", scene, null, {volume: 0.07});
 
 				await createCenario();
         await createGUI();
@@ -164,6 +166,7 @@
               Object.keys(inputMap).forEach(key=>inputMap[key] = false);
               inputMap["b"] = true;
               keydown = false;
+              victorySound.play();
               hero.dance();
             }
           }
