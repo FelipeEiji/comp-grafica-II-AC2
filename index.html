@@ -184,6 +184,14 @@
         sambaGUI.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         sambaGUI.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         advancedTexture.addControl(sambaGUI);
+        
+        var namesGUI = new BABYLON.GUI.TextBlock();
+        namesGUI.text = "Mateus Jose Daemon Martins 171043\nFelipe Eiji Maruyama 171150";
+        namesGUI.fontSize = 24;
+        namesGUI.color = "black";
+        namesGUI.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        namesGUI.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+        advancedTexture.addControl(namesGUI);
 
         winGUI = new BABYLON.GUI.TextBlock();
         winGUI.isVisible = false;
