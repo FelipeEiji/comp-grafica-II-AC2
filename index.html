@@ -85,6 +85,8 @@
       var collectSound = null;
       var victorySound = null;
 
+      var startAnimationPos = null;
+
 			var createDefaultEngine = async function() { 
 				return new BABYLON.Engine(canvas, true, { 
 					preserveDrawingBuffer: true, 
@@ -157,9 +159,9 @@
       {
         var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
         var instructions = new BABYLON.GUI.TextBlock();
-        instructions.text = "Move: WASD | Look arround: Mouse | Samba: B";
-        instructions.color = "red";
-        instructions.fontSize = 16;
+        instructions.text = "Movimento: WASD | Olhar em volta: Mouse | Sambar: B";
+        instructions.color = "purple";
+        instructions.fontSize = 20;
         instructions.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER
         instructions.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
         advancedTexture.addControl(instructions);
@@ -167,7 +169,7 @@
         sambaGUI = new BABYLON.GUI.TextBlock();
         sambaGUI.text = "Não deixe o samba morrer!\nColete todos os radios em ordem crescente de tamanho!";
         sambaGUI.fontSize = 24;
-        sambaGUI.color = "blue";
+        sambaGUI.color = "red";
         sambaGUI.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         sambaGUI.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         advancedTexture.addControl(sambaGUI);
@@ -183,14 +185,14 @@
         console.log(BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP);
         pointsGUI = new BABYLON.GUI.TextBlock();
         pointsGUI.text = points + "/10";
-        pointsGUI.color = "black";
+        pointsGUI.color = "yellow";
         pointsGUI.fontSize = 36;
         pointsGUI.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
         pointsGUI.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         pointsGUI.updatePoints = (newPoint)=>{
           points = newPoint;
           pointsGUI.text = `${points}/10`;
-          if(newPoint === 1){
+          if(newPoint === 10){
             if(!win){
               win = true;
               scene.actionManager = null;
@@ -328,6 +330,8 @@
 
       async function importRandomMeshes()
       {
+        var mat = new BABYLON.StandardMaterial("mat", scene);
+        mat.alpha = 0;
         // Importing barrel
         globalBarrel = BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "ExplodingBarrel.glb", scene, function (meshes) {
           barrel = meshes[0];
@@ -336,9 +340,7 @@
           barrel.position.y = -0.15;
           barrelBox = BABYLON.MeshBuilder.CreateBox("barrelBox", {size:1}, scene);
           barrelBox.position.x = barrel.position.x;
-          barrelBox.position.y = barrel.position.y;
-          var mat = new BABYLON.StandardMaterial("mat", scene);
-          mat.alpha = 0;
+          barrelBox.position.y = barrel.position.y;                   
           barrelBox.material = mat;
         });        
         
@@ -362,8 +364,6 @@
           dragon.position.x = -20;
           dragon.position.y = -0.15;
           dragon.position.z = 4;
-          var mat = new BABYLON.StandardMaterial("mat", scene);
-          mat.alpha = 0;
           var dragonBox = BABYLON.MeshBuilder.CreateBox("dragonBox", {height: 5, width: 3, depth:1.5}, scene);
           dragonBox.position = dragon.position;
           dragonBox.material = mat;
@@ -377,8 +377,6 @@
           house.position.x = 0;
           house.position.y = -0.15;
           house.position.z = -20;
-          var mat = new BABYLON.StandardMaterial("mat", scene);
-          mat.alpha = 0;
           var houseBox = BABYLON.MeshBuilder.CreateBox("dragonBox", {height: 5, width: 11, depth:6}, scene);
           houseBox.position = house.position;
           houseBox.material = mat;
@@ -410,8 +408,6 @@
           fan.position.x = -15;
           fan.position.y = 1.15;
           fan.position.z = -16;
-          var mat = new BABYLON.StandardMaterial("mat", scene);
-          mat.alpha = 0;
           var fanBox = BABYLON.MeshBuilder.CreateBox("dragonBox", {size:1}, scene);
           fanBox.position.x = fan.position.x;
           fanBox.position.y = 0;
@@ -427,8 +423,6 @@
           ball.position.x = 20;
           ball.position.y = 1.5;
           ball.position.z = -16;
-          var mat = new BABYLON.StandardMaterial("mat", scene);
-          mat.alpha = 0;
           var ballBox = BABYLON.MeshBuilder.CreateBox("dragonBox", {size:5}, scene);
           ballBox.position.x = ball.position.x;
           ballBox.position.y = 0;
