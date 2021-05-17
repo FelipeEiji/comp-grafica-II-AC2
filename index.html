@@ -56,6 +56,7 @@
       var win = false;
       var playAgainButton = null;
       var sambaGUI = null;
+      var testeBox = null;
 
       // Radios to be collected
       var radio1 = null;
@@ -104,9 +105,12 @@
         camera.wheelDeltaPercentage = 0.01;
         camera.upperBetaLimit = Math.PI / 2.2;
 
+        
+
         collectSound = new BABYLON.Sound("collectSound", "assets/sound-effects/collect.wav", scene, null, {volume: 0.07});
         victorySound = new BABYLON.Sound("collectSound", "assets/sound-effects/victory.mp3", scene, null, {volume: 0.07});
 
+        await createScenarioBoundaries()
 				await createCenario();
         await createGUI();
         await createCharacter(camera);
@@ -116,6 +120,15 @@
 
 				return scene;
 			}
+
+      async function createScenarioBoundaries()
+      {
+        var mat = new BABYLON.StandardMaterial("mat", scene);
+        mat.alpha = 0;
+        var centerBoundary = BABYLON.MeshBuilder.CreateCylinder("centerBoundary",{height: 20, diameter: 22},scene);
+        centerBoundary.checkCollisions = true;
+        centerBoundary.material = mat;
+      }
 
 			async function createCenario()
 			{
