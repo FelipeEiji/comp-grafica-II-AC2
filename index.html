@@ -102,8 +102,8 @@
 				const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 200, new BABYLON.Vector3(0, 0, 0));
 				camera.attachControl(canvas, true);
 				const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(4, 1, 0));
-        camera.lowerRadiusLimit = 20;
-        camera.upperRadiusLimit = 20;
+        camera.lowerRadiusLimit = 15;
+        camera.upperRadiusLimit = 15;
         camera.wheelDeltaPercentage = 0.01;
         camera.upperBetaLimit = Math.PI / 2.2;
 
@@ -130,6 +130,16 @@
         var centerBoundary = BABYLON.MeshBuilder.CreateCylinder("centerBoundary",{height: 20, diameter: 22},scene);
         centerBoundary.checkCollisions = true;
         centerBoundary.material = mat;
+        var groundBoundary = BABYLON.MeshBuilder.CreateCylinder("groundBoundary", {diameter: 80, thickness: 20});
+        groundBoundary.checkCollisions = true;
+        groundBoundary.position.y = -2;
+        groundBoundary.material = mat;
+        var outerBoundary = BABYLON.MeshBuilder.CreateTorus("outerBoundary", {diameter: 80, thickness: 20});
+        outerBoundary.position.y = 2;
+        outerBoundary.position.z = 5;
+        outerBoundary.position.x = 5;
+        outerBoundary.checkCollisions = true;
+        outerBoundary.material = mat;
       }
 
 			async function createCenario()
